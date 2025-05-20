@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+
+# Optional: OS or editor-specific
+.DS_Store
+*.swp
+.idea/
+.vscode/

@@ -1,0 +1,28 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@/applications": "./src/applications",
+          "@/controllers": "./src/controllers",
+          "@/errors": "./src/errors",
+          "@/middleware": "./src/middleware",
+          "@/responses": "./src/responses",
+          "@/routes": "./src/routes",
+          "@/services": "./src/services",
+          "@/utils": "./src/utils",
+          "@/validations": "./src/validations",
+          "@/constants": "./src/constants",
+          "@/tables": "./drizzle/tables.js",
+          "@/views": "./drizzle/views.js",
+          "@/relations": "./drizzle/relations.js",
+          "@/queues": "./src/queues/producers",
+          "@/schedulers": "./src/schedulers",
+          "@/api": "./src/api"
+        }
+      }
+    ]
+  ]
+}
