@@ -24,7 +24,7 @@ jobs:
         script: |
           set -e
           {
-            cd /home/username/contoh
+            cd /home/username/contoh/express-product
             echo "=== GIT PULL ==="
             git pull origin master
             echo "=== MIGRATE ==="
@@ -47,3 +47,4 @@ jobs:
         curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN_DEV }}/sendMessage \
         --data-urlencode chat_id=${{ secrets.TELEGRAM_CHAT_ID_DEV }} \
         --data-urlencode text="❌ Deploy ke DEV Server GAGAL!\n\nLog Error:\n$ERROR_MSG"
+
