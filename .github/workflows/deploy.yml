@@ -1,0 +1,49 @@
+name: Deploy to Dev Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy via SSH and Capture All Errors
+      id: deploy-step
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.CPANELDEV_HOST }}
+        username: ${{ secrets.CPANELDEV_USER }}
+        key: ${{ secrets.CPANELDEV_KEY }}
+        script_stop: false
+        script: |
+          set -e
+          {
+            cd /home/username/contoh
+            echo "=== GIT PULL ==="
+            git pull origin master
+            echo "=== MIGRATE ==="
+            php artisan migrate --force
+            echo "=== DEPLOY SUCCESS ==="
+          } 2>&1 | tee deploy.log
+      continue-on-error: true
+
+    - name: Notify Telegram on Success
+      if: success()
+      run: |
+        curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN_DEV }}/sendMessage \
+        -d chat_id=${{ secrets.TELEGRAM_CHAT_ID_DEV }} \
+        -d text="✅ Deploy ke DEV Server sukses!"
+
+    - name: Notify Telegram on Failure with Log
+      if: failure()
+      run: |
+        ERROR_MSG=$(cat deploy.log | head -n 15) # kirim 15 baris awal log
+        curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN_DEV }}/sendMessage \
+        --data-urlencode chat_id=${{ secrets.TELEGRAM_CHAT_ID_DEV }} \
+        --data-urlencode text="❌ Deploy ke DEV Server GAGAL!\n\nLog Error:\n$ERROR_MSG"
